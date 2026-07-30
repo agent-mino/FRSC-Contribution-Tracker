@@ -33,7 +33,13 @@ a { color: var(--forest); }
 .page {
   max-width: 1080px;
   margin: 0 auto;
-  padding: 32px 24px 64px;
+  padding: 20px 16px calc(84px + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding: 32px 24px 64px;
+  }
 }
 
 .masthead {
@@ -41,13 +47,13 @@ a { color: var(--forest); }
   align-items: baseline;
   justify-content: space-between;
   border-bottom: 3px solid var(--forest);
-  padding-bottom: 14px;
-  margin-bottom: 28px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .masthead h1 {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 700;
   letter-spacing: 0.01em;
   margin: 0;
@@ -55,10 +61,16 @@ a { color: var(--forest); }
 }
 
 .masthead .sub {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+@media (min-width: 768px) {
+  .masthead { padding-bottom: 14px; margin-bottom: 28px; }
+  .masthead h1 { font-size: 22px; }
+  .masthead .sub { font-size: 12px; }
 }
 
 .card {
@@ -138,6 +150,80 @@ td.num, th.num {
 
 tr:hover td { background: #faf8f2; }
 
+/* Tables become cards below 640px: one card per row, label/value stacked.
+   Add className="responsive" to a <table> and data-label="..." to each <td>
+   to opt it in. Wide desktop-only tables can skip this and rely on
+   horizontal scroll instead (acceptable desktop fallback, not primary). */
+@media (max-width: 640px) {
+  table.responsive,
+  table.responsive thead,
+  table.responsive tbody,
+  table.responsive th,
+  table.responsive td,
+  table.responsive tr {
+    display: block;
+  }
+
+  table.responsive thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  table.responsive tr {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 4px 14px;
+    margin-bottom: 12px;
+  }
+
+  table.responsive td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    white-space: normal;
+    text-align: right;
+    min-height: 24px;
+  }
+
+  table.responsive td:last-child { border-bottom: none; }
+
+  table.responsive td::before {
+    content: attr(data-label);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    font-weight: 600;
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  /* row-action cells (buttons) shouldn't show a label or split the row */
+  table.responsive td.row-actions {
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  table.responsive td.row-actions::before { content: none; }
+
+  table.responsive td.cell-plain {
+    justify-content: flex-start;
+  }
+  table.responsive td.cell-plain::before { content: none; }
+
+  table.responsive td.cell-expand {
+    display: block;
+  }
+  table.responsive td.cell-expand::before { content: none; }
+}
+
 .badge {
   display: inline-block;
   font-size: 11px;
@@ -163,6 +249,21 @@ button, .btn {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+button.icon-only {
+  padding: 10px;
+  width: 44px;
+}
+
+a[role="button"], .icon-btn {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 button:hover, .btn:hover { background: var(--forest-dark); }
@@ -175,15 +276,100 @@ button.secondary {
 }
 button.secondary:hover { background: var(--gold-soft); }
 
+button.danger {
+  background: var(--danger);
+}
+button.danger:hover { background: #7e2e24; }
+
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 20, 17, 0.45);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 100;
+  padding: 0;
+}
+
+.confirm-dialog {
+  background: var(--paper-raised);
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 24px 20px calc(20px + env(safe-area-inset-bottom));
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 -8px 30px rgba(15, 45, 32, 0.18);
+}
+
+.confirm-dialog-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--danger-soft);
+  color: var(--danger);
+  margin-bottom: 14px;
+}
+.confirm-dialog-icon[data-danger="false"] {
+  background: var(--gold-soft);
+  color: var(--forest-dark);
+}
+
+.confirm-dialog h3 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  margin: 0 0 8px;
+  color: var(--forest-dark);
+}
+
+.confirm-dialog p { font-size: 13.5px; line-height: 1.5; margin: 0 0 20px; }
+
+.confirm-dialog-actions {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+}
+
+.confirm-dialog-actions button { width: 100%; }
+
+.btn-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.btn-row button { width: 100%; }
+@media (min-width: 640px) {
+  .btn-row { flex-direction: row; }
+  .btn-row button { width: auto; }
+}
+
+@media (min-width: 640px) {
+  .confirm-overlay { align-items: center; }
+  .confirm-dialog { border-radius: var(--radius); padding: 24px; }
+  .confirm-dialog-actions { flex-direction: row; justify-content: flex-end; }
+  .confirm-dialog-actions button { width: auto; }
+}
+
 input, select {
   font-family: var(--font-body);
-  font-size: 14px;
-  padding: 9px 12px;
+  font-size: 16px; /* iOS Safari zooms the page on focus if inputs are under 16px */
+  padding: 11px 12px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   width: 100%;
   background: #fff;
   color: var(--ink);
+  min-height: 44px;
+}
+
+@media (min-width: 768px) {
+  input, select {
+    font-size: 14px;
+    padding: 9px 12px;
+    min-height: auto;
+  }
 }
 
 input:focus, select:focus, button:focus-visible {
@@ -200,6 +386,15 @@ label {
 }
 
 .field { margin-bottom: 16px; }
+
+/* Forms: always one column on mobile; expand from tablet width up. */
+.form-grid-2 { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.form-grid-4 { display: grid; grid-template-columns: 1fr; gap: 10px; }
+
+@media (min-width: 640px) {
+  .form-grid-2 { grid-template-columns: 1fr 1fr; }
+  .form-grid-4 { grid-template-columns: 1fr 1fr 2fr auto; align-items: end; }
+}
 
 .error-text {
   color: var(--danger);
@@ -224,25 +419,83 @@ label {
   background: var(--gold-soft);
 }
 
+/* Mobile (default): fixed bottom tab bar, thumb-reachable */
 nav.tabs {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
   display: flex;
-  gap: 4px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--line);
+  gap: 0;
+  margin: 0;
+  background: var(--paper-raised);
+  border-bottom: none;
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -2px 10px rgba(15, 45, 32, 0.06);
 }
 
 nav.tabs a {
-  padding: 10px 16px;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 56px;
+  padding: 8px 4px;
   text-decoration: none;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 10.5px;
   font-weight: 600;
-  border-bottom: 2px solid transparent;
+  border-bottom: none;
+  border-top: 2px solid transparent;
+  text-align: center;
+  line-height: 1.15;
 }
 
 nav.tabs a.active {
   color: var(--forest-dark);
-  border-bottom-color: var(--gold);
+  border-top-color: var(--gold);
+  background: var(--gold-soft);
+}
+
+nav.tabs a .badge { position: absolute; margin-left: 0; transform: translate(10px, -14px); }
+nav.tabs a { position: relative; }
+
+/* Desktop: horizontal top tab strip, as before */
+@media (min-width: 768px) {
+  nav.tabs {
+    position: static;
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+    border-top: none;
+    background: transparent;
+    box-shadow: none;
+    padding-bottom: 0;
+  }
+
+  nav.tabs a {
+    flex: 0 0 auto;
+    flex-direction: row;
+    min-height: 44px;
+    padding: 10px 16px;
+    font-size: 13px;
+    border-top: none;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+  }
+
+  nav.tabs a.active {
+    border-bottom-color: var(--gold);
+    border-top-color: transparent;
+    background: transparent;
+  }
+
+  nav.tabs a .badge { position: static; transform: none; margin-left: 6px; }
 }
 
 .spinner {

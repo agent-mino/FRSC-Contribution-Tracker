@@ -92,7 +92,7 @@ c. In the SQL Editor, run:
 
 ```sql
 insert into profiles (id, role, full_name)
-values ('<paste-uuid-here>', 'admin', 'Your Name')
+values ('ed276a8a-1a17-472d-aa28-62ae111320c7', 'admin', 'Your Name')
 on conflict (id) do update set role = 'admin';
 ```
 
@@ -155,11 +155,45 @@ uploaded — bank, month, batch, filename, row count, mismatch count, who
 uploaded it, and when. Useful for "did May's UBA file already get
 imported?" without digging into the database.
 
+**Deleting an import:** each row has a delete button (trash icon). Tapping
+it shows a confirmation naming the exact bank/month/batch and how many
+members will be affected — it looks this up before you confirm, not after.
+Confirming permanently removes that import and, via `ON DELETE CASCADE` on
+`deduction_transactions.import_id`, every deduction row tied to it. This
+means:
+
+- Only rows from *that* import disappear. Any other month, any other
+  import, and any manual adjustment a member has stays completely intact.
+- Balances are recalculated automatically — the same trigger that runs on
+  every insert/update also runs `AFTER DELETE`, so `balances` never goes
+  stale.
+- The deleted month vanishes from both the admin's per-member detail page
+  and that member's own dashboard immediately, since `member_month_totals`
+  is a live view over `deduction_transactions`, not a stored snapshot —
+  there's nothing to separately clean up.
+- Members themselves are never deleted by this action — only their
+  transaction rows from the one import.
+
 If your Supabase project has **email confirmation** turned on
 (Authentication → Providers → Email) and someone signs up via `/signup`,
 they'll need to click a confirmation link before they can sign in — the
 request is still submitted immediately either way, so you can review and
 accept it while they're doing that.
+
+## Mobile
+
+Every screen is designed mobile-first:
+
+- Admin nav becomes a fixed bottom tab bar under ~768px (top tab strip
+  above that), so the main sections are always one thumb-tap away.
+- Any table wider than a phone screen (members list, import history,
+  requests, import preview) automatically collapses into one card per row
+  below 640px — no horizontal scrolling required to read a row.
+- All buttons and tappable rows are at least 44×44px.
+- Forms are always a single column on mobile, expanding to multi-column
+  from tablet width up.
+- Inputs are 16px on mobile specifically to stop iOS Safari's
+  zoom-on-focus behavior.
 
 ## Deploying
 

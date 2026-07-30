@@ -227,7 +227,7 @@ export default function ImportWizard() {
               <h2>Duplicate deduction check</h2>
               <p className="error-text" style={{ marginTop: -8 }}>{duplicateError.message}</p>
               <div style={{ overflowX: "auto" }}>
-                <table>
+                <table className="responsive">
                   <thead>
                     <tr>
                       <th>Coop A/C</th>
@@ -238,9 +238,9 @@ export default function ImportWizard() {
                   <tbody>
                     {duplicateError.duplicates.slice(0, 12).map((dup) => (
                       <tr key={dup.coopAccountNo}>
-                        <td>{dup.coopAccountNo}</td>
-                        <td>{dup.name}</td>
-                        <td>
+                        <td data-label="Coop A/C">{dup.coopAccountNo}</td>
+                        <td data-label="Name">{dup.name}</td>
+                        <td data-label="Details">
                           {dup.categories?.length
                             ? `${dup.categories.join(", ")} already recorded from ${dup.existingSources?.join(", ") || "another import"}`
                             : dup.rows?.map((row) => `${row.sheetName}${row.batchLabel ? ` / ${row.batchLabel}` : ""}: ${naira(row.total)}`).join("; ")}
@@ -273,7 +273,7 @@ export default function ImportWizard() {
                 {sheet.batchLabel ? ` — ${sheet.batchLabel}` : ""}
               </h2>
               <div style={{ overflowX: "auto" }}>
-                <table>
+                <table className="responsive">
                   <thead>
                     <tr>
                       <th>Coop A/C</th>
@@ -289,14 +289,14 @@ export default function ImportWizard() {
                   <tbody>
                     {sheet.rows.map((row, index) => (
                       <tr key={`${row.coopAccountNo}-${index}`}>
-                        <td>{row.coopAccountNo}</td>
-                        <td>{row.name}</td>
-                        <td className="num">{naira(row.savings)}</td>
-                        <td className="num">{naira(row.loan)}</td>
-                        <td className="num">{naira(row.electronic)}</td>
-                        <td className="num">{naira(row.other)}</td>
-                        <td className="num" style={{ fontWeight: 700 }}>{naira(row.computedTotal)}</td>
-                        <td>
+                        <td data-label="Coop A/C">{row.coopAccountNo}</td>
+                        <td data-label="Name">{row.name}</td>
+                        <td className="num" data-label="Savings">{naira(row.savings)}</td>
+                        <td className="num" data-label="Loan">{naira(row.loan)}</td>
+                        <td className="num" data-label="Electronic">{naira(row.electronic)}</td>
+                        <td className="num" data-label="Other">{naira(row.other)}</td>
+                        <td className="num" data-label="Total" style={{ fontWeight: 700 }}>{naira(row.computedTotal)}</td>
+                        <td data-label="Status">
                           {row.isNewMember && <span className="badge ok">New member</span>}
                           {row.totalMismatch && <span className="badge warn" style={{ marginLeft: 4 }}>Total differs</span>}
                           {row.duplicateInUpload && <span className="badge warn" style={{ marginLeft: 4 }}>Duplicate</span>}
@@ -309,7 +309,7 @@ export default function ImportWizard() {
             </div>
           ))}
 
-          <div style={{ display: "flex", gap: 10 }}>
+          <div className="btn-row">
             <button onClick={() => handleConfirm(false)} disabled={confirming}>
               {confirming ? "Importing…" : `Confirm import (${preview.totalRows} rows)`}
             </button>

@@ -183,7 +183,7 @@ export default function MembersManager({ members }: { members: MemberRow[] }) {
 
       {showAdd && (
         <form onSubmit={handleAdd} className="card" style={{ background: "#fbfaf6" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+          <div className="form-grid-2">
             <div className="field">
               <label>Cooperative account no.</label>
               <input value={coopAccountNo} onChange={(e) => setCoopAccountNo(e.target.value)} placeholder="ACS-201" required />
@@ -226,7 +226,7 @@ export default function MembersManager({ members }: { members: MemberRow[] }) {
       )}
 
       <div style={{ overflowX: "auto" }}>
-        <table>
+        <table className="responsive">
           <thead>
             <tr>
               <th>
@@ -254,7 +254,7 @@ export default function MembersManager({ members }: { members: MemberRow[] }) {
             {filtered.map((m) => (
               <Fragment key={m.id}>
                 <tr>
-                  <td>
+                  <td className="cell-plain">
                     <input
                       type="checkbox"
                       style={{ width: "auto" }}
@@ -263,21 +263,21 @@ export default function MembersManager({ members }: { members: MemberRow[] }) {
                       aria-label={`Select ${m.name}`}
                     />
                   </td>
-                  <td><Link href={`/admin/member/${m.id}`}>{m.coop_account_no}</Link></td>
-                  <td>{m.name}</td>
-                  <td>{m.bank_name || "—"}</td>
-                  <td><span className={`badge ${m.status === "active" ? "ok" : "warn"}`}>{m.status}</span></td>
-                  <td>
+                  <td data-label="Coop A/C"><Link href={`/admin/member/${m.id}`}>{m.coop_account_no}</Link></td>
+                  <td data-label="Name">{m.name}</td>
+                  <td data-label="Bank">{m.bank_name || "—"}</td>
+                  <td data-label="Status"><span className={`badge ${m.status === "active" ? "ok" : "warn"}`}>{m.status}</span></td>
+                  <td data-label="Login">
                     <span className={`badge ${m.hasLogin ? "ok" : "warn"}`}>
                       {m.hasLogin ? "Linked" : "Not linked"}
                     </span>
                   </td>
-                  <td className="num">{naira(m.balances.savings)}</td>
-                  <td className="num">{naira(m.balances.loan)}</td>
-                  <td className="num">{naira(m.balances.electronic)}</td>
-                  <td className="num">{naira(m.balances.other)}</td>
-                  <td>
-                    <div style={{ display: "flex", gap: 6 }}>
+                  <td className="num" data-label="Savings">{naira(m.balances.savings)}</td>
+                  <td className="num" data-label="Loan repaid">{naira(m.balances.loan)}</td>
+                  <td className="num" data-label="Electronic">{naira(m.balances.electronic)}</td>
+                  <td className="num" data-label="Other">{naira(m.balances.other)}</td>
+                  <td className="row-actions">
+                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
                       {!m.hasLogin && (
                         <button
                           className="secondary"
@@ -307,7 +307,7 @@ export default function MembersManager({ members }: { members: MemberRow[] }) {
                 </tr>
                 {loginFormForId === m.id && (
                   <tr>
-                    <td colSpan={11} style={{ background: "#fbfaf6" }}>
+                    <td className="cell-expand" colSpan={11} style={{ background: "#fbfaf6" }}>
                       <CreateLoginInlineForm
                         memberId={m.id}
                         onDone={() => { setLoginFormForId(null); router.refresh(); }}
@@ -345,7 +345,7 @@ function LoginModeFields({
           Set temporary password myself
         </label>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: mode === "manual" ? "1fr 1fr" : "1fr", gap: 14 }}>
+      <div className={mode === "manual" ? "form-grid-2" : ""} style={mode === "manual" ? undefined : { display: "grid", gap: 14 }}>
         <div className="field">
           <label>Login email</label>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />

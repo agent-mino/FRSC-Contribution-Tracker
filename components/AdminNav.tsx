@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { Upload, Users, History, Bell } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import SignOutButton from "./SignOutButton";
 import NotificationBell from "./NotificationBell";
 
-export default async function AdminNav({ active }: { active: "import" | "members" | "requests" | "history" | "alerts" }) {
+export default async function AdminNav({ active }: { active: "import" | "members" | "requests" | "history" }) {
   const supabase = createClient();
   const { data: pending } = await supabase
     .from("membership_requests")
@@ -27,21 +28,22 @@ export default async function AdminNav({ active }: { active: "import" | "members
       </div>
       <nav className="tabs">
         <Link href="/admin/import" className={active === "import" ? "active" : ""}>
-          Import schedule
+          <Upload size={18} aria-hidden="true" />
+          Import
         </Link>
         <Link href="/admin/members" className={active === "members" ? "active" : ""}>
+          <Users size={18} aria-hidden="true" />
           Members
         </Link>
         <Link href="/admin/history" className={active === "history" ? "active" : ""}>
-          Import history
-        </Link>
-        <Link href="/admin/alerts" className={active === "alerts" ? "active" : ""}>
-          Alerts
+          <History size={18} aria-hidden="true" />
+          History
         </Link>
         <Link href="/admin/requests" className={active === "requests" ? "active" : ""}>
+          <Bell size={18} aria-hidden="true" />
           Requests
           {pendingRequests.length > 0 && (
-            <span className="badge warn" style={{ marginLeft: 6 }}>{pendingRequests.length}</span>
+            <span className="badge warn">{pendingRequests.length}</span>
           )}
         </Link>
       </nav>

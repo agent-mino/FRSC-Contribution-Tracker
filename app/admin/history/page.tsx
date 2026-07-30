@@ -1,11 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AdminNav from "@/components/AdminNav";
-
-const MONTH_NAMES = [
-  "", "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
+import ImportHistoryManager from "@/components/ImportHistoryManager";
 
 export default async function AdminHistoryPage() {
   const supabase = createClient();
@@ -36,46 +32,10 @@ export default async function AdminHistoryPage() {
         <h2>Import history ({imports?.length ?? 0})</h2>
         <p className="muted" style={{ marginTop: -8, marginBottom: 20 }}>
           Every bank schedule that's been uploaded, in case anyone asks whether a month's file
-          was already imported.
+          was already imported. Deleting an import removes only that file's entries from each
+          affected member's record — nothing else they have on file is touched.
         </p>
-        {!imports || imports.length === 0 ? (
-          <p className="muted">No imports yet — go to Import schedule to upload your first file.</p>
-        ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Bank</th>
-                <th>Batch</th>
-                <th>File</th>
-                <th className="num">Rows</th>
-                <th className="num">Mismatches</th>
-                <th>Uploaded by</th>
-                <th>Uploaded at</th>
-              </tr>
-            </thead>
-            <tbody>
-              {imports.map((imp) => (
-                <tr key={imp.id}>
-                  <td>{MONTH_NAMES[imp.month]} {imp.year}</td>
-                  <td>{imp.bank_name}</td>
-                  <td>{imp.batch_label || "—"}</td>
-                  <td style={{ maxWidth: 220, overflow: "hidden", textOverflow: "ellipsis" }}>{imp.source_filename}</td>
-                  <td className="num">{imp.row_count}</td>
-                  <td className="num">
-                    {imp.mismatch_count > 0 ? (
-                      <span className="badge warn">{imp.mismatch_count}</span>
-                    ) : (
-                      <span className="badge ok">0</span>
-                    )}
-                  </td>
-                  <td>{imp.uploaded_by ? uploaderName[imp.uploaded_by] || "—" : "—"}</td>
-                  <td>{new Date(imp.uploaded_at).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" })}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        <ImportHistoryManager imports={imports ?? []} uploaderName={uploaderName} />
       </div>
     </div>
   );

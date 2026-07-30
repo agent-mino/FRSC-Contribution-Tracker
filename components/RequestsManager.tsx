@@ -104,7 +104,7 @@ export default function RequestsManager({
       {shown.length === 0 ? (
         <p className="muted">No {filter === "pending" ? "pending" : ""} requests.</p>
       ) : (
-        <table>
+        <table className="responsive">
           <thead>
             <tr>
               <th>Name</th>
@@ -118,14 +118,14 @@ export default function RequestsManager({
           <tbody>
             {shown.map((r) => (
               <tr key={r.id}>
-                <td>{r.name}</td>
-                <td>{r.email}</td>
-                <td>{r.coop_account_no}</td>
-                <td>{formatDate(r.created_at)}</td>
-                <td>
+                <td data-label="Name">{r.name}</td>
+                <td data-label="Email">{r.email}</td>
+                <td data-label="Account no.">{r.coop_account_no}</td>
+                <td data-label="Submitted">{formatDate(r.created_at)}</td>
+                <td data-label="Status">
                   <RequestBadges request={r} member={memberByAccount.get(r.coop_account_no.trim().toUpperCase())} />
                 </td>
-                <td>
+                <td className="row-actions">
                   {r.status === "pending" && (
                     <div style={{ display: "grid", gap: 6 }}>
                       {warning?.requestId === r.id && (

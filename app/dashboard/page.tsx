@@ -116,7 +116,7 @@ export default async function DashboardPage() {
         {!history || history.length === 0 ? (
           <p className="muted">No deductions have been recorded for you yet.</p>
         ) : (
-          <table>
+          <table className="responsive">
             <thead>
               <tr>
                 <th>Month</th>
@@ -130,12 +130,12 @@ export default async function DashboardPage() {
             <tbody>
               {history.map((h) => (
                 <tr key={`${h.year}-${h.month}`}>
-                  <td>{MONTH_NAMES[h.month]} {h.year}</td>
-                  <td className="num">{naira(h.savings)}</td>
-                  <td className="num">{naira(h.loan)}</td>
-                  <td className="num">{naira(h.electronic)}</td>
-                  <td className="num">{naira(h.other)}</td>
-                  <td className="num" style={{ fontWeight: 700 }}>{naira(h.total)}</td>
+                  <td data-label="Month">{MONTH_NAMES[h.month]} {h.year}</td>
+                  <td className="num" data-label="Savings">{naira(h.savings)}</td>
+                  <td className="num" data-label="Loan">{naira(h.loan)}</td>
+                  <td className="num" data-label="Electronic">{naira(h.electronic)}</td>
+                  <td className="num" data-label="Other">{naira(h.other)}</td>
+                  <td className="num" data-label="Total" style={{ fontWeight: 700 }}>{naira(h.total)}</td>
                 </tr>
               ))}
             </tbody>
