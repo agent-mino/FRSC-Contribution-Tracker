@@ -46,7 +46,7 @@ export default function AdjustmentForm({ memberId }: { memberId: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 2fr auto", gap: 10, alignItems: "end" }}>
+    <form onSubmit={handleSubmit} className="form-grid-4">
       <div className="field" style={{ marginBottom: 0 }}>
         <label>Category</label>
         <select value={category} onChange={(e) => setCategory(e.target.value)}>
@@ -73,7 +73,7 @@ export default function AdjustmentForm({ memberId }: { memberId: string }) {
           onChange={(e) => setNote(e.target.value)}
         />
       </div>
-      <button type="submit" disabled={loading}>{loading ? "Posting…" : "Post"}</button>
+      <button type="submit" disabled={loading} style={{ width: "100%" }}>{loading ? "Posting…" : "Post"}</button>
       {error && <p className="error-text" style={{ gridColumn: "1 / -1" }}>{error}</p>}
     </form>
   );
