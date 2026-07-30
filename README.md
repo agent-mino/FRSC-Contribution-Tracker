@@ -92,7 +92,7 @@ c. In the SQL Editor, run:
 
 ```sql
 insert into profiles (id, role, full_name)
-values ('<paste-uuid-here>', 'admin', 'Your Name')
+values ('ed276a8a-1a17-472d-aa28-62ae111320c7', 'admin', 'Your Name')
 on conflict (id) do update set role = 'admin';
 ```
 
