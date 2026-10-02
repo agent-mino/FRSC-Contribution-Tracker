@@ -1,5 +1,7 @@
 # AGAPE Cooperative Ledger
 
+[![CI](https://github.com/agent-mino/FRSC-Contribution-Tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/agent-mino/FRSC-Contribution-Tracker/actions/workflows/ci.yml)
+
 A ledger for the AGAPE Cooperative Society (FRSC) that replaces monthly bank
 deduction schedules with a proper running ledger: import any bank's Excel
 schedule, get one recomputed source of truth, and let each of the 200+
